@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Central pessoal para explorar dados públicos: conhecimento, clima, indicadores, terminal local, notas e senhas.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src https://pt.wikipedia.org https://geocoding-api.open-meteo.com https://api.open-meteo.com https://api.worldbank.org; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Central de Inteligência — Lilith Core</title>
+<link rel="stylesheet" href="style.css">
+<script src="app.js" defer></script>
+</head>
+<body>
+<canvas id="matrix" aria-hidden="true"></canvas>
+<a class="skip" href="#main">Ir para o conteúdo</a>
+<div class="layout">
+<nav class="side" aria-label="Módulos">
+  <div class="brand">L CORE <span class="dot"></span></div>
+  <a href="#home">Visão geral</a>
+  <a href="#wiki">Conhecimento</a>
+  <a href="#clima">Clima</a>
+  <a href="#indicadores">Indicadores</a>
+  <a href="#terminal">Terminal</a>
+  <a href="#notas">Notas</a>
+  <a href="#senhas">Gerador de senhas</a>
+  <a href="#seguranca">Verificar senha</a>
+  <a href="#rastro">Rastro digital</a>
+</nav>
+
+<main id="main">
+<section id="home" class="view">
+  <p class="tag">SYSTEM OVERVIEW</p>
+  <h1>Central de Inteligência</h1>
+  <p>Nove módulos para consultar dados públicos, guardar notas e testar senhas. Tudo roda no seu navegador.</p>
+  <div class="card hero">
+    <p class="tag">LILITH CORE</p>
+    <h2>Explore a web pública com precisão.</h2>
+    <p>Conhecimento, clima e indicadores econômicos em um só lugar — sem cadastro, sem rastreio e sem depender de dados privados de terceiros.</p>
+    <a class="btn" href="#wiki">Abrir explorador →</a>
+  </div>
+  <div class="grid4">
+    <div class="card"><p class="tag">CONSULTAS</p><h3 id="stQ">0</h3><small>nesta sessão</small></div>
+    <div class="card"><p class="tag">NOTAS</p><h3 id="stN">0</h3><small>salvas localmente</small></div>
+    <div class="card"><p class="tag">SENHAS</p><h3 id="stS">0</h3><small>geradas nesta sessão</small></div>
+    <div class="card"><p class="tag">UPTIME</p><h3 id="stU">00:00:00</h3><small>desde o início</small></div>
+  </div>
+  <h2>Atalhos</h2>
+  <div class="grid4">
+    <a class="card short" href="#wiki"><b>Explorador de conhecimento</b><small>Busca na Wikipédia em português</small></a>
+    <a class="card short" href="#clima"><b>Clima e tempo</b><small>Condições agora e previsão de 7 dias</small></a>
+    <a class="card short" href="#indicadores"><b>Indicadores mundiais</b><small>Séries históricas do Banco Mundial</small></a>
+    <a class="card short" href="#rastro"><b>Rastro digital</b><small>Monta buscas públicas a partir de um número</small></a>
+  </div>
+  <div class="card">
+    <div class="row"><h2>Atividade <span class="live">AO VIVO</span></h2><button id="logClear" class="ghost">Limpar registro</button></div>
+    <ul id="log" class="log"></ul>
+  </div>
+</section>
+
+<section id="wiki" class="view">
+  <p class="tag">KNOWLEDGE SEARCH</p><h1>Explorador de conhecimento</h1>
+  <p>Pesquisa direta na API pública da Wikipédia em português. Nenhum termo é armazenado.</p>
+  <form id="wikiForm" class="row">
+    <label class="sr" for="wikiQ">Termo de pesquisa</label>
+    <input id="wikiQ" maxlength="200" required placeholder="Ex.: Machado de Assis">
+    <button>Pesquisar</button>
+  </form>
+  <p id="wikiStatus" class="status">Aguardando pesquisa…</p>
+  <div id="wikiOut"></div>
+  <small>Fonte: Wikipédia em português — API pública MediaWiki.</small>
+</section>
+
+<section id="clima" class="view">
+  <p class="tag">OPEN-METEO</p><h1>Clima e tempo</h1>
+  <p>Condições atuais e previsão de sete dias para qualquer cidade do mundo.</p>
+  <form id="climaForm" class="row">
+    <label class="sr" for="climaQ">Cidade</label>
+    <input id="climaQ" maxlength="100" required placeholder="Ex.: Recife">
+    <button>Buscar clima</button>
+  </form>
+  <p id="climaStatus" class="status">Aguardando cidade…</p>
+  <div id="climaOut"></div>
+  <small>Fonte: Open-Meteo (geocodificação e previsão).</small>
+</section>
+
+<section id="indicadores" class="view">
+  <p class="tag">WORLD BANK OPEN DATA</p><h1>Indicadores mundiais</h1>
+  <p>Séries históricas oficiais do Banco Mundial, de 2010 até o último ano disponível.</p>
+  <form id="wbForm" class="row">
+    <select id="wbPais" aria-label="País">
+      <option value="BRA">Brasil</option><option value="ARG">Argentina</option><option value="CHL">Chile</option>
+      <option value="USA">Estados Unidos</option><option value="CHN">China</option><option value="IND">Índia</option>
+      <option value="DEU">Alemanha</option><option value="FRA">França</option><option value="JPN">Japão</option>
+      <option value="GBR">Reino Unido</option><option value="MEX">México</option><option value="PRT">Portugal</option>
+    </select>
+    <select id="wbInd" aria-label="Indicador">
+      <option value="NY.GDP.MKTP.CD">PIB (US$ correntes)</option>
+      <option value="NY.GDP.PCAP.CD">PIB per capita (US$ correntes)</option>
+      <option value="SP.POP.TOTL">População total</option>
+      <option value="SP.DYN.LE00.IN">Expectativa de vida ao nascer</option>
+      <option value="SE.ADT.LITR.ZS">Alfabetização de adultos (%)</option>
+      <option value="FP.CPI.TOTL.ZG">Inflação, preços ao consumidor (%)</option>
+      <option value="SL.UEM.TOTL.ZS">Desemprego (% da força de trabalho)</option>
+      <option value="IT.NET.USER.ZS">Indivíduos usando a internet (%)</option>
+      <option value="EG.FEC.RNEW.ZS">Energia renovável no consumo final (%)</option>
+      <option value="EN.GHG.CO2.PC.CE.AR5">Emissões de CO₂ per capita (t)</option>
+    </select>
+    <button>Consultar série</button>
+  </form>
+  <p id="wbStatus" class="status">Escolha um país e um indicador.</p>
+  <div id="wbOut"></div>
+  <small>Fonte: World Bank Open Data.</small>
+</section>
+
+<section id="terminal" class="view">
+  <p class="tag">LOCAL SHELL</p><h1>Terminal local</h1>
+  <p>Comandos que rodam inteiramente no navegador. Digite <code>help</code> para ver a lista.</p>
+  <div class="term">
+    <div class="termhead">lilith@local — shell</div>
+    <div id="termOut" class="termout" aria-live="polite"></div>
+    <form id="termForm" class="row"><span>λ</span>
+      <label class="sr" for="termIn">Comando do terminal</label>
+      <input id="termIn" autocomplete="off" spellcheck="false" maxlength="300">
+    </form>
+  </div>
+</section>
+
+<section id="notas" class="view">
+  <p class="tag">LOCAL STORAGE</p><h1>Notas locais</h1>
+  <p>Guardadas no <code>localStorage</code> deste navegador. Nada é enviado para servidor nenhum.</p>
+  <form id="noteForm" class="card col">
+    <label for="noteT">Título</label><input id="noteT" maxlength="120" required>
+    <label for="noteC">Conteúdo</label><textarea id="noteC" maxlength="5000" rows="4"></textarea>
+    <button>Salvar nota</button>
+    <small>As notas ficam apenas neste navegador. Limpar os dados do site apaga tudo.</small>
+  </form>
+  <h2><span id="noteCount">0</span> NOTAS</h2>
+  <div id="noteList"></div>
+</section>
+
+<section id="senhas" class="view">
+  <p class="tag">CRYPTO RNG</p><h1>Laboratório de senhas</h1>
+  <p>Geradas com <code>crypto.getRandomValues</code> e amostragem sem viés de módulo. A senha nunca sai do navegador.</p>
+  <div class="card col">
+    <label for="pwLen">Comprimento <b id="pwLenV">20</b></label>
+    <input id="pwLen" type="range" min="8" max="64" value="20">
+    <label><input type="checkbox" id="pwU" checked> Maiúsculas (A-Z)</label>
+    <label><input type="checkbox" id="pwL" checked> Minúsculas (a-z)</label>
+    <label><input type="checkbox" id="pwD" checked> Números (0-9)</label>
+    <label><input type="checkbox" id="pwS" checked> Símbolos (!@#$…)</label>
+    <button id="pwGen">Gerar senha</button>
+    <div class="row"><output id="pwOut" class="mono"></output><button id="pwCopy" class="ghost">Copiar</button></div>
+    <small id="pwInfo">A senha é criada e exibida localmente. Ela não é enviada, registrada nem salva em lugar nenhum.</small>
+  </div>
+</section>
+
+<section id="seguranca" class="view">
+  <p class="tag">SECURITY CHECK</p><h1>Verificação de segurança</h1>
+  <p>Análise local e em tempo real. O que você digita aqui não é transmitido nem armazenado.</p>
+  <div class="card col">
+    <label for="chkIn">Senha para analisar</label>
+    <input id="chkIn" type="password" autocomplete="off" maxlength="256">
+    <label><input type="checkbox" id="chkShow"> Mostrar senha</label>
+    <div class="bar"><div id="chkBar"></div></div>
+    <p id="chkRes" class="status"></p>
+    <ul id="chkTips"></ul>
+  </div>
+</section>
+
+<section id="rastro" class="view">
+  <p class="tag">OPEN SOURCES</p><h1>Rastro digital</h1>
+  <p>Monta buscas públicas a partir de um número de telefone. Esta ferramenta não varre a internet: ela prepara os links e você abre cada um.</p>
+  <form id="telForm" class="row">
+    <label class="sr" for="telIn">Número de telefone</label>
+    <input id="telIn" maxlength="25" required placeholder="(11) 91234-5678">
+    <label><input type="checkbox" id="telOk" required> É meu número ou tenho autorização</label>
+    <button>Montar busca ↗</button>
+  </form>
+  <p id="telStatus" class="status">Aguardando número…</p>
+  <ul id="telOut"></ul>
+  <small>Use apenas com o seu próprio número ou com autorização expressa do titular. No Brasil, tratar dados pessoais de terceiros sem base legal contraria a LGPD (Lei 13.709/2018).</small>
+</section>
+</main>
+</div>
+</body>
+</html>

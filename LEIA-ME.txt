@@ -1,0 +1,39 @@
+CENTRAL DE INTELIGÊNCIA — LILITH CORE
+=====================================
+
+ARQUIVOS
+- index.html  -> página (estrutura dos 9 módulos)
+- style.css   -> visual
+- app.js      -> toda a lógica
+- _headers    -> cabeçalhos de segurança (Netlify / Cloudflare Pages)
+
+COMO RODAR
+Abra por um servidor local (não use duplo clique / file://):
+
+  cd central-de-inteligencia
+  python -m http.server 8080
+
+Depois acesse http://localhost:8080
+
+DADOS REAIS (APIs públicas, sem chave)
+- Wikipédia em português (MediaWiki)
+- Open-Meteo (clima e geocodificação)
+- Banco Mundial (World Bank Open Data)
+
+SEGURANÇA
+- Content-Security-Policy: só scripts do próprio site; conexões só com as 3 APIs.
+- Nada de innerHTML, eval ou onclick inline: dados externos entram como texto puro (anti-XSS).
+- Requisições com timeout, sem cookies e sem referrer; limite de frequência por módulo.
+- Links externos com rel="noopener noreferrer".
+- Notas validadas ao ler do localStorage.
+- Senhas: crypto.getRandomValues sem viés de módulo; nunca vão para o log;
+  área de transferência limpa 30 s após copiar.
+- Rastro digital: exige confirmação de autorização; só monta links (LGPD).
+
+PUBLICAR
+Use HTTPS. O arquivo _headers já envia X-Frame-Options, nosniff, CSP etc.
+em Netlify e Cloudflare Pages. Em outro servidor, configure os mesmos cabeçalhos.
+
+OBSERVAÇÃO
+O indicador de CO2 per capita usa o código EN.GHG.CO2.PC.CE.AR5.
+Se vier vazio, o Banco Mundial pode ter mudado o código.

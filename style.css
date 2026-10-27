@@ -1,0 +1,69 @@
+:root{--bg:#020604;--card:rgba(0,20,8,.82);--fg:#b6ffc9;--mut:#3f9a5c;--ac:#00ff66;--ac2:#00e5ff;--bad:#ff3355;--line:#0b3d1d}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 "JetBrains Mono","Fira Code",ui-monospace,Consolas,monospace}
+#matrix{position:fixed;inset:0;z-index:-2;opacity:.18}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.85))}
+::selection{background:var(--ac);color:#000}
+.layout{display:flex;min-height:100vh}
+.side{width:230px;background:rgba(0,10,4,.92);border-right:1px solid var(--line);padding:20px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh}
+.side a{color:var(--mut);text-decoration:none;padding:6px 10px;border-left:2px solid transparent;text-transform:uppercase;font-size:12px;letter-spacing:.08em}
+.side a::before{content:"> ";opacity:0}
+.side a.on,.side a:hover{color:var(--ac);border-left-color:var(--ac);background:rgba(0,255,102,.06);text-shadow:0 0 6px var(--ac)}
+.side a.on::before,.side a:hover::before{opacity:1}
+.brand{font-weight:700;margin-bottom:14px;color:var(--ac);text-shadow:0 0 8px var(--ac);letter-spacing:.15em}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ac);box-shadow:0 0 8px var(--ac);animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.2}}
+main{flex:1;padding:32px;max-width:1050px}
+.view{display:none}.view.on{display:block;animation:boot .35s ease-out}
+@keyframes boot{from{opacity:0;transform:translateY(6px);filter:blur(2px)}to{opacity:1;transform:none;filter:none}}
+h1{color:var(--ac);text-transform:uppercase;letter-spacing:.06em;text-shadow:0 0 10px rgba(0,255,102,.6)}
+h1::after{content:"_";animation:blink 1s steps(1) infinite}
+h2,h3{color:var(--fg)}
+.tag{color:var(--ac2);font-size:11px;letter-spacing:.25em;margin:0}
+.tag::before{content:"[ "}.tag::after{content:" ]"}
+.card{background:var(--card);border:1px solid var(--line);padding:16px;margin:12px 0;position:relative;box-shadow:inset 0 0 20px rgba(0,255,102,.04)}
+.card::before{content:"";position:absolute;top:-1px;left:-1px;width:12px;height:12px;border-top:2px solid var(--ac);border-left:2px solid var(--ac)}
+.card::after{content:"";position:absolute;bottom:-1px;right:-1px;width:12px;height:12px;border-bottom:2px solid var(--ac);border-right:2px solid var(--ac)}
+.hero{border-color:var(--ac);box-shadow:0 0 25px rgba(0,255,102,.12)}
+.grid4 h3{font-size:28px;margin:6px 0;color:var(--ac);text-shadow:0 0 8px var(--ac)}
+.btn{display:inline-block;border:1px solid var(--ac);color:var(--ac);padding:8px 14px;text-decoration:none;text-transform:uppercase;letter-spacing:.1em}
+.btn:hover{background:var(--ac);color:#000;box-shadow:0 0 15px var(--ac)}
+.short{display:flex;flex-direction:column;gap:4px;text-decoration:none;color:var(--fg);margin:0}
+.short:hover{border-color:var(--ac);box-shadow:0 0 15px rgba(0,255,102,.2)}
+.short small{color:var(--mut)}
+.live{font-size:10px;color:var(--bad);border:1px solid var(--bad);padding:1px 6px;vertical-align:middle;animation:blink 1.5s infinite}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.col{display:flex;flex-direction:column;gap:8px}
+input,select,textarea,button{font:inherit;padding:8px 12px;border:1px solid var(--line);background:#000;color:var(--ac);border-radius:0}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ac);box-shadow:0 0 10px rgba(0,255,102,.35)}
+input:not([type]),input[type=password],input[type=text]{flex:1;min-width:200px}
+input[type=checkbox],input[type=range]{accent-color:var(--ac)}
+button{background:transparent;border:1px solid var(--ac);color:var(--ac);cursor:pointer;text-transform:uppercase;letter-spacing:.1em}
+button:hover{background:var(--ac);color:#000;box-shadow:0 0 15px var(--ac)}
+button.ghost{border-color:var(--line);color:var(--mut)}
+button.ghost:hover{border-color:var(--bad);color:var(--bad);background:transparent;box-shadow:none}
+.status{color:var(--ac2)}.status::before{content:"$ "}
+.log{list-style:none;padding:0;max-height:260px;overflow:auto;font-size:12px;color:var(--mut)}
+.log li:first-child{color:var(--ac)}
+#pwOut{flex:1;word-break:break-all;font-size:17px;color:var(--ac);text-shadow:0 0 6px var(--ac)}
+.term{background:#000;border:1px solid var(--ac);padding:12px;box-shadow:0 0 30px rgba(0,255,102,.15)}
+.termhead{color:var(--mut);font-size:12px;margin-bottom:6px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.termout{height:360px;overflow:auto;white-space:pre-wrap;color:var(--ac)}
+.term input{border:0;background:transparent;box-shadow:none}
+code{color:var(--ac2);border:1px solid var(--line);padding:0 5px}
+table{border-collapse:collapse;width:100%}
+td,th{padding:6px 10px;border-bottom:1px dashed var(--line);text-align:left}
+th{color:var(--ac2);text-transform:uppercase;font-size:11px;letter-spacing:.1em}
+.bar{height:8px;background:#001a0a;border:1px solid var(--line)}
+.bar div{height:100%;width:0;transition:.2s;box-shadow:0 0 10px currentColor}
+a{color:var(--ac2)}
+small{color:var(--mut)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.skip{position:absolute;left:-999px}.skip:focus{left:8px;top:8px}
+.chart{display:flex;align-items:flex-end;gap:4px;height:170px;margin:12px 0;border-bottom:1px solid var(--ac)}
+.chart div{flex:1;background:linear-gradient(to top,rgba(0,255,102,.25),var(--ac));min-height:2px;box-shadow:0 0 6px rgba(0,255,102,.5)}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:var(--line)}
+@media(max-width:700px){.layout{flex-direction:column}.side{width:100%;height:auto;position:static;flex-direction:row;flex-wrap:wrap}main{padding:16px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}#matrix{display:none}}
